@@ -23,12 +23,12 @@ namespace Lab4
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            winners.Clear();
             OpenFileDialog OPF = new OpenFileDialog();
             OPF.Filter = "txt files (*.txt)|*.txt";
             if (OPF.ShowDialog() == DialogResult.OK)
             {
                 string[] lines = null;
-                dataGridView1.Rows.Clear();
                 try
                 {
                     lines = File.ReadAllLines(OPF.FileName, Encoding.Unicode);
@@ -58,7 +58,7 @@ namespace Lab4
                         for (int i = 0; i < linesCount; i++)
                             if (dataGridView1.Rows[i].Visible)
                             {
-                                for (int j = 0; j < 4; j++)
+                                for (int j = 0; j < dataGridView1.ColumnCount; j++)
                                     try
                                     {
                                         line += (dataGridView1.Rows[i].Cells[j].Value);
@@ -83,7 +83,7 @@ namespace Lab4
 
         private void FillTable(string[] lines)
         {
-            int count = 0;
+            Clear();
             int sum = 0;
 
             for (int i = 0; i < linesCount; i++) // Цикл добавления строк
@@ -91,7 +91,7 @@ namespace Lab4
 
             for (int i = 0; i < linesCount; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j < dataGridView1.ColumnCount; j++)
                     try
                     {
                         String[] substrings = lines[sum].Split(':');
@@ -110,7 +110,6 @@ namespace Lab4
                     {
                           MessageBox.Show(e1.Message);
                     }
-               // count = 0;
                 sum++;
             }
         }
@@ -126,8 +125,6 @@ namespace Lab4
             for (int i = 0; i < linesCount; i++) // Цикл добавления строк
                 dataGridView1.Rows.Add();  // добавление строки 
 
-
-
             int j = 0;
 
             try
@@ -142,8 +139,36 @@ namespace Lab4
             catch (Exception e1)
             {
                 MessageBox.Show(e1.Message);
-            }
-            
+            }   
+        }
+
+        private void закрытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
+        private void Clear()
+        {
+            dataGridView1.Dispose();
+
+            dataGridView1 = new System.Windows.Forms.DataGridView();
+            dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
+            dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Year,
+            this.Country,
+            this.Winner,
+            this.PrizeWinner});
+            dataGridView1.GridColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridView1.Location = new System.Drawing.Point(0, 31);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridView1.RowTemplate.Height = 24;
+            dataGridView1.RowTemplate.Resizable = DataGridViewTriState.True;
+            dataGridView1.Size = new System.Drawing.Size(673, 402);
+            dataGridView1.TabIndex = 1;
+
+            Controls.Add(this.dataGridView1);
         }
     }
 }
